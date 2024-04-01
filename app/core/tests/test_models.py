@@ -1,0 +1,32 @@
+from django.test import TestCase
+from django.contrib.auth import get_user_model
+
+class ModelTests(TestCase):
+
+    def test_create_with_email(self):
+        email = 'test@gmail.com'
+        password='test@pass'
+        user=get_user_model().objects.createUser(
+            email=email,
+            password=password
+        )
+        self.assertEqual(user.email,email)
+        self.assertTrue(user.check_password(password))
+    
+    def test_new_email(self):
+        sample=[
+            ['test1@EXAMPLE.com','test1@example.com']
+        ]
+        for email,exp in sample:
+            user=get_user_model().objects.createUser(email,'sample123')
+            self.assertEqual(user.email,exp)
+    def test_new_user_without_email(self):
+     with self.assertRaises(ValueError):
+        get_user_model().objects.createUser('','ankush')
+    def test_create_superUser(self):
+        user=get_user_model().objects.create_superuser(
+            'test@example.com',
+            'test123'
+        )
+        self.assertTrue(user.is_superuser)
+        self.assertTrue(user.is_staff)
